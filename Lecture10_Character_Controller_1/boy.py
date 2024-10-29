@@ -60,7 +60,7 @@ class Sleep:
                 boy.frame * 100, 200, 100, 100,
                 -3.141592 / 2,  # 90도 회전
                 '',  # 좌우상하 반전 x
-                boy.x - 25, boy.y - 25, 100, 100
+                boy.x + 25, boy.y - 25, 100, 100
             )
         pass
 class Run:
@@ -96,6 +96,8 @@ class AutoRun:
         boy.action = 1
 
         boy.frame = 0
+
+        boy.start_run_time = get_time()
         pass
 
     @staticmethod
@@ -112,6 +114,15 @@ class AutoRun:
             boy.action = 1
         boy.x += boy.dir * 15
         boy.frame = (boy.frame + 1) % 8
+
+        if get_time() - boy.start_run_time > 5:
+            if boy.dir == 1: # 오른쪽을 바라보고 있으면
+                boy.action = 3 # 오른쪽을 바라보는 Idle
+                boy.face_dir = 1
+            elif boy.dir == -1: # 왼쪽을 바라보고 있으면
+                boy.action = 2 # 왼쪽을 바라보는 Idle
+                boy.face_dir = -1
+            boy.state_machine.add_event(('TIME_OUT',0))
         pass
 
     @staticmethod
@@ -131,7 +142,7 @@ class Boy:
         self.state_machine.set_transitions({Run : {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle}, # Run 상태에서 어떤 이벤트 들어와도 처리 x
                                             Idle : {right_down: Run, left_down: Run, left_up: Run, right_up: Run, time_out: Sleep, a_down: AutoRun},
                                             Sleep : {right_down: Run, left_down: Run, right_up: Run, left_up: Run, space_down: Idle},
-                                            AutoRun : {right_down: Run, left_down: Run, right_up: Idle, left_up: Idle}
+                                            AutoRun : {right_down: Run, left_down: Run, right_up: Idle, left_up: Idle, time_out : Idle}
                                             }
                                            )
 
