@@ -82,6 +82,10 @@ class Run:
     @staticmethod
     def do(boy):
         boy.x += boy.dir * 5
+        if boy.x > 800:
+            boy.x -= 15
+        elif boy.x < 0:
+            boy.x += 15
         boy.frame = (boy.frame + 1) % 8
 
     @staticmethod
