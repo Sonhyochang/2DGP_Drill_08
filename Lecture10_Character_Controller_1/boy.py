@@ -3,7 +3,7 @@ from asyncio import timeout
 from pico2d import load_image, get_time
 
 from Lecture10_Character_Controller_1.state_machine import space_down, time_out, right_down, right_up, left_down, \
-    left_up, start_event
+    left_up, start_event, a_down
 from state_machine import StateMachine
 
 #상태를 킄래스 통해서 정의
@@ -92,6 +92,10 @@ class Run:
 class AutoRun:
     @staticmethod
     def enter(boy,e):
+        boy.dir = 1
+        boy.action = 1
+
+        boy.frame = 0
         pass
 
     @staticmethod
@@ -100,10 +104,19 @@ class AutoRun:
 
     @staticmethod
     def do(boy):
+        if boy.x > 800:
+            boy.dir = -1
+            boy.action = 0
+        elif boy.x < 0:
+            boy.dir = 1
+            boy.action = 1
+        boy.x += boy.dir * 15
+        boy.frame = (boy.frame + 1) % 8
         pass
 
     @staticmethod
     def draw(boy):
+        boy.image.clip_draw(boy.frame * 100, boy.action * 100, 100, 100, boy.x, boy.y + 15, 150, 150)
         pass
 
 class Boy:
@@ -114,10 +127,11 @@ class Boy:
         self.action = 3
         self.image = load_image('animation_sheet.png')
         self.state_machine = StateMachine(self) # 소년 객체의 statemachine 생성
-        self.state_machine.start(Idle) # 초기상태
+        self.state_machine.start(AutoRun) # 초기상태
         self.state_machine.set_transitions({Run : {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle}, # Run 상태에서 어떤 이벤트 들어와도 처리 x
-                                            Idle : {right_down: Run, left_down: Run, left_up: Run, right_up: Run, time_out: Sleep},
-                                            Sleep : {right_down: Run, left_down: Run, right_up: Run, left_up: Run, space_down: Idle}
+                                            Idle : {right_down: Run, left_down: Run, left_up: Run, right_up: Run, time_out: Sleep, a_down: AutoRun},
+                                            Sleep : {right_down: Run, left_down: Run, right_up: Run, left_up: Run, space_down: Idle},
+                                            AutoRun : {right_down: Run, left_down: Run, right_up: Idle, left_up: Idle}
                                             }
                                            )
 
