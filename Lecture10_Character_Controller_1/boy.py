@@ -96,8 +96,13 @@ class Run:
 class AutoRun:
     @staticmethod
     def enter(boy,e):
-        boy.dir = 1
-        boy.action = 1
+        if a_down(e):
+            if boy.face_dir == 1:
+                boy.dir = 1
+                boy.action = 1
+            elif boy.face_dir == -1:
+                boy.dir = -1
+                boy.action = 0
 
         boy.frame = 0
 
