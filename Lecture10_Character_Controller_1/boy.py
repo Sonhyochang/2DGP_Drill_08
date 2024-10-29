@@ -93,7 +93,7 @@ class Run:
         boy.image.clip_draw(boy.frame * 100, boy.action*100,100,100,boy.x,boy.y)
         pass
 
-class AutoRun:
+class AutoRun: # AutoRun 구현
     @staticmethod
     def enter(boy,e):
         if a_down(e):
