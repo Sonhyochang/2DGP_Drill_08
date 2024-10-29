@@ -147,7 +147,7 @@ class Boy:
         self.action = 3
         self.image = load_image('animation_sheet.png')
         self.state_machine = StateMachine(self) # 소년 객체의 statemachine 생성
-        self.state_machine.start(AutoRun) # 초기상태
+        self.state_machine.start(Idle) # 초기상태
         self.state_machine.set_transitions({Run : {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle}, # Run 상태에서 어떤 이벤트 들어와도 처리 x
                                             Idle : {right_down: Run, left_down: Run, left_up: Run, right_up: Run, time_out: Sleep, a_down: AutoRun},
                                             Sleep : {right_down: Run, left_down: Run, right_up: Run, left_up: Run, space_down: Idle},
